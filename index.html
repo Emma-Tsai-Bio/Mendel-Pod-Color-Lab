@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>孟德爾的豌豆遺傳實驗 - 豆莢顏色篇</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0fdf4; /* Light green background */
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 遊戲區域卡片樣式 */
+        .game-card {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .game-card.active {
+            display: block;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* 配子移動動畫 */
+        .gamete {
+            position: absolute;
+            transition: all 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+            z-index: 10;
+        }
+
+        /* 種子發芽動畫 */
+        .plant-grow {
+            transform-origin: bottom center;
+            animation: growUp 2s ease-out forwards;
+        }
+
+        @keyframes growUp {
+            0% { transform: scaleY(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: scaleY(1); opacity: 1; }
+        }
+
+        .pod-appear {
+            opacity: 0;
+            transform: scale(0);
+            animation: popIn 0.5s 2s ease-out forwards;
+        }
+
+        @keyframes popIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="max-w-3xl w-full bg-white rounded-2xl shadow-xl overflow-hidden border-4 border-green-600">
+        
+        <!-- 標題區 -->
+        <div class="bg-green-600 text-white p-6 text-center">
+            <h1 class="text-3xl font-black tracking-wider">🌱 孟德爾的豌豆遺傳實驗</h1>
+            <h2 class="text-xl mt-2 font-medium">第一章：豆莢顏色篇</h2>
+        </div>
+
+        <div class="p-6 md:p-8 min-h-[500px] relative">
+            
+            <!-- ==================== 階段一：基因型判斷 ==================== -->
+            <div id="stage1" class="game-card active">
+                <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded mb-6">
+                    <h3 class="font-bold text-lg text-green-800 mb-2">👨‍🔬 實驗指導語：</h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        歡迎來到遺傳學實驗室！在豌豆的世界裡，豆莢的顏色是由一對遺傳因子控制的：<br>
+                        🟢 <strong class="text-green-700">顯性表徵（綠色）：</strong> 只要有一個顯性因子就會顯現，用大寫字母 <strong class="text-2xl">G</strong> 表示。<br>
+                        🟡 <strong class="text-yellow-600">隱性表徵（黃色）：</strong> 必須兩個都是隱性因子才會顯現，用小寫字母 <strong class="text-2xl">g</strong> 表示。<br>
+                        <br>
+                        請觀察下方兩株<strong>「純品系」</strong>（成對因子皆相同）的親代豌豆，並判斷它們的基因型。
+                    </p>
+                </div>
+
+                <div class="flex flex-col md:flex-row justify-around items-center gap-8 my-8">
+                    <!-- 綠色豆莢親代 -->
+                    <div class="flex flex-col items-center bg-gray-50 p-6 rounded-xl shadow-sm border border-gray-200 w-full md:w-5/12">
+                        <svg viewBox="0 0 100 50" class="w-32 h-32 text-green-500 mb-4 drop-shadow-md">
+                            <path d="M10,25 Q50,0 90,25 Q50,50 10,25 Z" fill="currentColor" />
+                            <circle cx="30" cy="25" r="6" fill="#166534" />
+                            <circle cx="50" cy="25" r="6" fill="#166534" />
+                            <circle cx="70" cy="25" r="6" fill="#166534" />
+                        </svg>
+                        <h4 class="font-bold text-lg mb-2">綠色豆莢 (親代 P1)</h4>
+                        <label class="mb-1 text-sm text-gray-600">請選擇基因型：</label>
+                        <select id="p1-select" class="block w-full p-2 border-2 border-green-300 rounded text-center font-bold text-xl bg-white focus:border-green-500 focus:ring-0">
+                            <option value="">-- 請選擇 --</option>
+                            <option value="GG">GG</option>
+                            <option value="Gg">Gg</option>
+                            <option value="gg">gg</option>
+                        </select>
+                    </div>
+
+                    <!-- 黃色豆莢親代 -->
+                    <div class="flex flex-col items-center bg-gray-50 p-6 rounded-xl shadow-sm border border-gray-200 w-full md:w-5/12">
+                        <svg viewBox="0 0 100 50" class="w-32 h-32 text-yellow-400 mb-4 drop-shadow-md">
+                            <path d="M10,25 Q50,0 90,25 Q50,50 10,25 Z" fill="currentColor" />
+                            <circle cx="30" cy="25" r="6" fill="#854d0e" />
+                            <circle cx="50" cy="25" r="6" fill="#854d0e" />
+                            <circle cx="70" cy="25" r="6" fill="#854d0e" />
+                        </svg>
+                        <h4 class="font-bold text-lg mb-2">黃色豆莢 (親代 P2)</h4>
+                        <label class="mb-1 text-sm text-gray-600">請選擇基因型：</label>
+                        <select id="p2-select" class="block w-full p-2 border-2 border-yellow-300 rounded text-center font-bold text-xl bg-white focus:border-yellow-500 focus:ring-0">
+                            <option value="">-- 請選擇 --</option>
+                            <option value="GG">GG</option>
+                            <option value="Gg">Gg</option>
+                            <option value="gg">gg</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="text-center mt-6">
+                    <p id="stage1-msg" class="text-red-500 font-bold mb-4 h-6"></p>
+                    <button onclick="checkStage1()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:scale-105 text-lg">
+                        確認答案，進入下一步 ➔
+                    </button>
+                </div>
+            </div>
+
+            <!-- ==================== 階段二：配子形成 ==================== -->
+            <div id="stage2" class="game-card">
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded mb-6">
+                    <h3 class="font-bold text-lg text-blue-800 mb-2">👨‍🔬 實驗指導語：</h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        太棒了！純品系綠色是 <strong>GG</strong>，純品系黃色是 <strong>gg</strong>。<br>
+                        現在我們要讓這兩株豌豆進行「人工異花授粉」。在產生生殖細胞（配子）時，成對的遺傳因子會分離，只提供<strong>其中一個</strong>給下一代。<br>
+                        👉 <strong>請分別點擊下方的綠色親代與黃色親代</strong>，觀察遺傳因子的傳遞！
+                    </p>
+                </div>
+
+                <div class="relative flex flex-col items-center justify-between h-[300px] mt-8">
+                    <!-- 親代區 -->
+                    <div class="flex justify-between w-full px-12">
+                        <div id="p1-click" class="cursor-pointer text-center group" onclick="animateGamete(1)">
+                            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center border-4 border-green-500 shadow-md group-hover:bg-green-200 transition">
+                                <span class="text-4xl font-black text-green-700">GG</span>
+                            </div>
+                            <p class="mt-2 font-bold text-gray-600">點擊提供因子</p>
+                        </div>
+                        <div id="p2-click" class="cursor-pointer text-center group" onclick="animateGamete(2)">
+                            <div class="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center border-4 border-yellow-500 shadow-md group-hover:bg-yellow-200 transition">
+                                <span class="text-4xl font-black text-yellow-700">gg</span>
+                            </div>
+                            <p class="mt-2 font-bold text-gray-600">點擊提供因子</p>
+                        </div>
+                    </div>
+
+                    <!-- 動畫飛行的字母 (隱藏，直到觸發) -->
+                    <div id="flying-G" class="gamete text-5xl font-black text-green-600 opacity-0" style="left: 20%; top: 20px;">G</div>
+                    <div id="flying-g" class="gamete text-5xl font-black text-yellow-600 opacity-0" style="right: 20%; top: 20px;">g</div>
+
+                    <!-- 子代種子區 -->
+                    <div class="mt-auto relative">
+                        <div id="seed-container" class="w-32 h-32 bg-gray-100 rounded-full border-4 border-gray-400 flex items-center justify-center shadow-inner relative z-0 transition-all duration-500">
+                            <span id="seed-genotype" class="text-5xl font-black text-gray-800 tracking-widest opacity-0 transition-opacity duration-500 z-20"></span>
+                        </div>
+                        <p class="text-center mt-3 font-bold text-lg text-gray-700">結合後的種子 (子代 F₁)</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-8">
+                    <button id="btn-to-stage3" onclick="goToStage3()" class="hidden bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:scale-105 text-lg mx-auto">
+                        受精完成！進入預測階段 ➔
+                    </button>
+                </div>
+            </div>
+
+            <!-- ==================== 階段三：預測 ==================== -->
+            <div id="stage3" class="game-card">
+                <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded mb-6">
+                    <h3 class="font-bold text-lg text-purple-800 mb-2">🤔 預測時間：</h3>
+                    <p class="text-gray-700 leading-relaxed text-lg">
+                        這顆帶有 <strong class="text-2xl">Gg</strong> 遺傳因子的種子已經準備好要種下去了。<br>
+                        根據顯性 (<strong class="text-green-600">G</strong>) 與隱性 (<strong class="text-yellow-600">g</strong>) 的規則，在按下萌芽按鈕前，請先預測：<br>
+                        <strong>這顆種子長大後，結出的豆莢會是什麼顏色？</strong>
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                    <button onclick="selectPrediction('A', '綠色豆莢')" class="pred-btn border-2 border-gray-300 rounded-xl p-4 text-left hover:border-green-500 hover:bg-green-50 transition flex items-center gap-4">
+                        <span class="text-2xl font-black text-gray-400 bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full">A</span>
+                        <span class="text-xl font-bold text-gray-700">綠色豆莢 🟢</span>
+                    </button>
+                    <button onclick="selectPrediction('B', '黃色豆莢')" class="pred-btn border-2 border-gray-300 rounded-xl p-4 text-left hover:border-yellow-500 hover:bg-yellow-50 transition flex items-center gap-4">
+                        <span class="text-2xl font-black text-gray-400 bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full">B</span>
+                        <span class="text-xl font-bold text-gray-700">黃色豆莢 🟡</span>
+                    </button>
+                    <button onclick="selectPrediction('C', '淺綠色 (介於中間)')" class="pred-btn border-2 border-gray-300 rounded-xl p-4 text-left hover:border-lime-500 hover:bg-lime-50 transition flex items-center gap-4">
+                        <span class="text-2xl font-black text-gray-400 bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full">C</span>
+                        <span class="text-xl font-bold text-gray-700">淺綠色 (介於中間) 🍏</span>
+                    </button>
+                    <button onclick="selectPrediction('D', '綠黃斑點')" class="pred-btn border-2 border-gray-300 rounded-xl p-4 text-left hover:border-teal-500 hover:bg-teal-50 transition flex items-center gap-4">
+                        <span class="text-2xl font-black text-gray-400 bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full">D</span>
+                        <span class="text-xl font-bold text-gray-700">綠黃斑點 🦓</span>
+                    </button>
+                </div>
+
+                <div class="text-center mt-8">
+                    <p id="prediction-msg" class="text-purple-600 font-bold mb-4 h-6 text-lg"></p>
+                    <button id="btn-to-stage4" onclick="goToStage4()" class="hidden bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:scale-105 text-lg mx-auto">
+                        預測完成，準備種植 ➔
+                    </button>
+                </div>
+            </div>
+
+            <!-- ==================== 階段四：萌芽與結果 ==================== -->
+            <div id="stage4" class="game-card">
+                
+                <div class="flex flex-col md:flex-row gap-8">
+                    <!-- 左側：控制與動畫區 -->
+                    <div class="w-full md:w-1/2 flex flex-col items-center justify-center bg-sky-50 rounded-xl p-6 border-2 border-sky-200">
+                        <div class="mb-4 text-center">
+                            <p class="text-gray-500 font-bold mb-1">你的預測：</p>
+                            <p id="display-prediction" class="text-2xl font-black text-purple-700 bg-purple-100 px-4 py-2 rounded-lg inline-block border border-purple-300">...</p>
+                        </div>
+
+                        <!-- 動畫區域 -->
+                        <div class="h-64 w-full relative flex flex-col items-center justify-end border-b-8 border-amber-800 pb-2">
+                            <!-- 種子 -->
+                            <div id="final-seed" class="w-12 h-12 bg-amber-200 rounded-full border-2 border-amber-500 flex items-center justify-center font-bold absolute bottom-2 z-10 transition-all duration-1000">Gg</div>
+                            
+                            <!-- 植物主幹與葉子 (初始隱藏) -->
+                            <div id="plant" class="w-2 h-32 bg-green-600 absolute bottom-6 z-0 opacity-0 flex flex-col items-center justify-around pb-4">
+                                <!-- 葉子 -->
+                                <div class="w-8 h-4 bg-green-500 rounded-full absolute -left-7 top-10 transform -rotate-12"></div>
+                                <div class="w-8 h-4 bg-green-500 rounded-full absolute -right-7 top-16 transform rotate-12"></div>
+                                
+                                <!-- 結出的豆莢 (動畫最後出現) -->
+                                <div id="final-pod" class="absolute -top-6 -right-16 z-20 opacity-0 drop-shadow-lg">
+                                    <svg viewBox="0 0 100 50" class="w-20 h-20 text-green-500">
+                                        <path d="M10,25 Q50,0 90,25 Q50,50 10,25 Z" fill="currentColor" />
+                                        <circle cx="30" cy="25" r="5" fill="#166534" />
+                                        <circle cx="50" cy="25" r="5" fill="#166534" />
+                                        <circle cx="70" cy="25" r="5" fill="#166534" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button id="btn-germinate" onclick="germinate()" class="mt-8 bg-amber-600 hover:bg-amber-700 text-white font-bold py-4 px-10 rounded-full shadow-[0_6px_0_#92400e] active:shadow-[0_0px_0_#92400e] active:translate-y-2 transition-all text-2xl tracking-widest">
+                            🌱 萌芽發育
+                        </button>
+                    </div>
+
+                    <!-- 右側：結果評語區 (初始隱藏) -->
+                    <div id="feedback-area" class="w-full md:w-1/2 opacity-0 transition-opacity duration-1000 flex flex-col justify-center">
+                        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6 relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-2 h-full bg-green-500"></div>
+                            <h3 class="text-2xl font-black text-gray-800 mb-4 border-b pb-2">實驗結果揭曉！</h3>
+                            <p class="text-xl mb-4">這顆 <strong>Gg</strong> 種子結出的豆莢是：<br><span class="text-3xl font-black text-green-600">🟢 綠色豆莢</span></p>
+                            
+                            <div id="feedback-content" class="bg-gray-50 p-4 rounded-lg text-lg leading-relaxed text-gray-700 border border-gray-200">
+                                <!-- 評語將由 JS 動態填入 -->
+                            </div>
+
+                            <button onclick="location.reload()" class="mt-6 w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-4 rounded transition">
+                                ↺ 重新進行實驗
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // 狀態變數
+        let userPredictionCode = '';
+        let userPredictionText = '';
+        let gamete1Done = false;
+        let gamete2Done = false;
+
+        // 顯示特定卡片
+        function showStage(stageId) {
+            document.querySelectorAll('.game-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.getElementById(stageId).classList.add('active');
+        }
+
+        // ==================== 階段一邏輯 ====================
+        function checkStage1() {
+            const p1 = document.getElementById('p1-select').value;
+            const p2 = document.getElementById('p2-select').value;
+            const msg = document.getElementById('stage1-msg');
+
+            if (!p1 || !p2) {
+                msg.textContent = "請先為兩株親代選擇基因型！";
+                return;
+            }
+
+            if (p1 === 'GG' && p2 === 'gg') {
+                msg.className = "text-green-600 font-bold mb-4 h-6 text-lg";
+                msg.textContent = "答對了！準備進入配子形成階段...";
+                setTimeout(() => showStage('stage2'), 1500);
+            } else {
+                msg.className = "text-red-500 font-bold mb-4 h-6";
+                if (p1 !== 'GG') {
+                    msg.textContent = "提示：綠色是顯性純品系，應該都是大寫。";
+                } else if (p2 !== 'gg') {
+                    msg.textContent = "提示：黃色是隱性純品系，應該都是小寫。";
+                }
+            }
+        }
+
+        // ==================== 階段二邏輯 ====================
+        function animateGamete(parent) {
+            const seed = document.getElementById('seed-container');
+            const seedRect = seed.getBoundingClientRect();
+            const seedGenotype = document.getElementById('seed-genotype');
+            
+            if (parent === 1 && !gamete1Done) {
+                const flyingG = document.getElementById('flying-G');
+                flyingG.style.opacity = '1';
+                // 簡易移動到中央
+                flyingG.style.transform = `translate(150px, 150px) scale(0.5)`; 
+                
+                setTimeout(() => {
+                    flyingG.style.display = 'none';
+                    gamete1Done = true;
+                    updateSeedText();
+                }, 1000);
+                
+                document.getElementById('p1-click').classList.add('opacity-50', 'pointer-events-none');
+            }
+            
+            if (parent === 2 && !gamete2Done) {
+                const flyingg = document.getElementById('flying-g');
+                flyingg.style.opacity = '1';
+                // 簡易移動到中央
+                flyingg.style.transform = `translate(-150px, 150px) scale(0.5)`;
+                
+                setTimeout(() => {
+                    flyingg.style.display = 'none';
+                    gamete2Done = true;
+                    updateSeedText();
+                }, 1000);
+
+                document.getElementById('p2-click').classList.add('opacity-50', 'pointer-events-none');
+            }
+        }
+
+        function updateSeedText() {
+            const seedGenotype = document.getElementById('seed-genotype');
+            if (gamete1Done && !gamete2Done) seedGenotype.innerHTML = '<span class="text-green-600">G</span>_';
+            if (!gamete1Done && gamete2Done) seedGenotype.innerHTML = '_<span class="text-yellow-600">g</span>';
+            
+            if (gamete1Done && gamete2Done) {
+                seedGenotype.innerHTML = '<span class="text-green-600">G</span><span class="text-yellow-600">g</span>';
+                document.getElementById('btn-to-stage3').classList.remove('hidden');
+                document.getElementById('btn-to-stage3').classList.add('block');
+            }
+            seedGenotype.style.opacity = '1';
+        }
+
+        function goToStage3() {
+            showStage('stage3');
+        }
+
+        // ==================== 階段三邏輯 ====================
+        function selectPrediction(code, text) {
+            userPredictionCode = code;
+            userPredictionText = text;
+
+            // UI 樣式更新
+            document.querySelectorAll('.pred-btn').forEach(btn => {
+                btn.classList.remove('ring-4', 'ring-purple-400', 'bg-purple-50');
+            });
+            event.currentTarget.classList.add('ring-4', 'ring-purple-400', 'bg-purple-50');
+
+            const msg = document.getElementById('prediction-msg');
+            msg.textContent = `你的預測「${text}」已記錄。準備好觀察實驗結果了嗎？`;
+            
+            document.getElementById('btn-to-stage4').classList.remove('hidden');
+            document.getElementById('btn-to-stage4').classList.add('block');
+        }
+
+        function goToStage4() {
+            const displayPred = document.getElementById('display-prediction');
+            displayPred.textContent = userPredictionText;
+            
+            // 根據預測選項設定對應的顏色
+            displayPred.className = 'text-2xl font-black px-4 py-2 rounded-lg inline-block border';
+            if (userPredictionCode === 'A') {
+                displayPred.classList.add('text-green-700', 'bg-green-100', 'border-green-300');
+            } else if (userPredictionCode === 'B') {
+                displayPred.classList.add('text-yellow-700', 'bg-yellow-100', 'border-yellow-300');
+            } else if (userPredictionCode === 'C') {
+                displayPred.classList.add('text-lime-700', 'bg-lime-100', 'border-lime-300');
+            } else if (userPredictionCode === 'D') {
+                displayPred.classList.add('text-teal-700', 'bg-teal-100', 'border-teal-300');
+            }
+
+            showStage('stage4');
+        }
+
+        // ==================== 階段四邏輯 ====================
+        const feedbacks = {
+            'A': "<strong class='text-green-700 text-xl'>🎉 預測完全正確！</strong><br><br>你的觀察很敏銳。雖然子代帶有一個隱性的黃色因子 <strong>g</strong>，但因為顯性的綠色因子 <strong class='text-green-600 text-xl'>G</strong> 具有遮蓋效果，所以表現出的特徵依然是綠色。<br>這就是孟德爾提出的<strong>「顯性律」</strong>。",
+            'B': "<strong class='text-red-600 text-xl'>💡 預測結果不完全正確！</strong><br><br>雖然你看到了隱性因子 <strong>g</strong>，但在遺傳學中，只要有一個顯性因子 <strong class='text-green-600 text-xl'>G</strong> 存在，隱性特徵（黃色）就會被完全遮蓋住。<br>所以外觀上只會呈現綠色。",
+            'C': "<strong class='text-orange-600 text-xl'>💡 預測結果不完全正確！</strong><br><br>孟德爾發現遺傳因子是「顆粒式」遺傳，不是像調油漆一樣混合的。<br>顯性因子 <strong class='text-green-600 text-xl'>G</strong> 會完全主導表徵，讓它呈現完整的綠色，不會變成淺綠色。",
+            'D': "<strong class='text-orange-600 text-xl'>💡 預測結果不完全正確！</strong><br><br>遺傳因子並非同時局部呈現。在這種簡單顯性遺傳中，顯性因子 <strong class='text-green-600 text-xl'>G</strong> 會決定整個豆莢的顏色，把黃色的特徵完全隱藏起來。"
+        };
+
+        function germinate() {
+            // 隱藏按鈕避免重複點擊
+            const btn = document.getElementById('btn-germinate');
+            btn.style.display = 'none';
+
+            // 1. 種子變暗/植入土中感覺
+            const seed = document.getElementById('final-seed');
+            seed.style.transform = 'scale(0.8) translateY(10px)';
+            seed.style.backgroundColor = '#d97706';
+            seed.style.color = 'transparent';
+
+            // 2. 植物長大動畫
+            setTimeout(() => {
+                document.getElementById('plant').classList.add('plant-grow');
+            }, 500);
+
+            // 3. 豆莢出現動畫
+            setTimeout(() => {
+                document.getElementById('final-pod').classList.add('pod-appear');
+            }, 1000);
+
+            // 4. 顯示評語
+            setTimeout(() => {
+                const feedbackArea = document.getElementById('feedback-area');
+                const feedbackContent = document.getElementById('feedback-content');
+                
+                feedbackContent.innerHTML = feedbacks[userPredictionCode];
+                feedbackArea.style.opacity = '1';
+            }, 2500);
+        }
+
+    </script>
+</body>
+</html>
