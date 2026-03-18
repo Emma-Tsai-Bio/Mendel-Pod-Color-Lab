@@ -66,12 +66,11 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-    <div class="max-w-3xl w-full bg-white rounded-2xl shadow-xl overflow-hidden border-4 border-green-600">
+    <div class="max-w-4xl w-full bg-white rounded-2xl shadow-xl overflow-hidden border-4 border-green-600">
         
         <!-- 標題區 -->
-        <div class="bg-green-600 text-white p-6 text-center">
-            <h1 class="text-3xl font-black tracking-wider">🌱 孟德爾的豌豆遺傳實驗</h1>
-            <h2 class="text-xl mt-2 font-medium">第一章：豆莢顏色篇</h2>
+        <div class="bg-green-600 text-white p-6 text-center relative">
+            <h1 class="text-3xl font-black tracking-wider">🌱 孟德爾豆莢顏色實驗室</h1>
         </div>
 
         <div class="p-6 md:p-8 min-h-[500px] relative">
@@ -223,27 +222,22 @@
 
             <!-- ==================== 階段四：萌芽與結果 ==================== -->
             <div id="stage4" class="game-card">
-                
                 <div class="flex flex-col md:flex-row gap-8">
                     <!-- 左側：控制與動畫區 -->
                     <div class="w-full md:w-1/2 flex flex-col items-center justify-center bg-sky-50 rounded-xl p-6 border-2 border-sky-200">
                         <div class="mb-4 text-center">
                             <p class="text-gray-500 font-bold mb-1">你的預測：</p>
-                            <p id="display-prediction" class="text-2xl font-black text-purple-700 bg-purple-100 px-4 py-2 rounded-lg inline-block border border-purple-300">...</p>
+                            <p id="display-prediction" class="text-2xl font-black">...</p>
                         </div>
 
                         <!-- 動畫區域 -->
                         <div class="h-64 w-full relative flex flex-col items-center justify-end border-b-8 border-amber-800 pb-2">
-                            <!-- 種子 -->
-                            <div id="final-seed" class="w-12 h-12 bg-amber-200 rounded-full border-2 border-amber-500 flex items-center justify-center font-bold absolute bottom-2 z-10 transition-all duration-1000">Gg</div>
+                            <div id="final-seed" class="w-12 h-12 bg-gray-300 rounded-full border-2 border-gray-500 flex items-center justify-center font-bold absolute bottom-2 z-10 transition-all duration-1000">Gg</div>
                             
-                            <!-- 植物主幹與葉子 (初始隱藏) -->
                             <div id="plant" class="w-2 h-32 bg-green-600 absolute bottom-6 z-0 opacity-0 flex flex-col items-center justify-around pb-4">
-                                <!-- 葉子 -->
                                 <div class="w-8 h-4 bg-green-500 rounded-full absolute -left-7 top-10 transform -rotate-12"></div>
                                 <div class="w-8 h-4 bg-green-500 rounded-full absolute -right-7 top-16 transform rotate-12"></div>
                                 
-                                <!-- 結出的豆莢 (動畫最後出現) -->
                                 <div id="final-pod" class="absolute -top-6 -right-16 z-20 opacity-0 drop-shadow-lg">
                                     <svg viewBox="0 0 100 50" class="w-20 h-20 text-green-500">
                                         <path d="M10,25 Q50,0 90,25 Q50,50 10,25 Z" fill="currentColor" />
@@ -260,7 +254,7 @@
                         </button>
                     </div>
 
-                    <!-- 右側：結果評語區 (初始隱藏) -->
+                    <!-- 右側：結果評語區 -->
                     <div id="feedback-area" class="w-full md:w-1/2 opacity-0 transition-opacity duration-1000 flex flex-col justify-center">
                         <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6 relative overflow-hidden">
                             <div class="absolute top-0 left-0 w-2 h-full bg-green-500"></div>
@@ -271,26 +265,103 @@
                                 <!-- 評語將由 JS 動態填入 -->
                             </div>
 
-                            <button onclick="location.reload()" class="mt-6 w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-4 rounded transition">
-                                ↺ 重新進行實驗
+                            <!-- ★ 新增的轉場按鈕 ★ -->
+                            <div class="mt-6 pt-4 border-t border-gray-200">
+                                <button onclick="setupStage5()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-xl shadow-md transition transform hover:scale-105">
+                                    🔬 進入進階實驗：F₁ 互相交配 ➔
+                                </button>
+                                <button onclick="location.reload()" class="w-full mt-2 text-gray-500 underline text-sm py-2">
+                                    ↺ 重新進行 P 代實驗
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== 階段五：F1 x F1 自交 ==================== -->
+            <div id="stage5" class="game-card">
+                <div class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded mb-6">
+                    <h3 class="font-bold text-lg text-orange-800 mb-2">🧪 進階挑戰：子二代 (F₂) 的誕生</h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        我們已經確認了第一代 (F₁) 都是帶有 <strong>Gg</strong> 基因型的綠色豆莢。<br>
+                        現在，讓兩株 <strong>Gg</strong> 的豌豆互相交配。每株親代在產生配子時，會隨機提供 <strong>G</strong> 或 <strong>g</strong> 其中一個因子。<br>
+                        👉 <strong>請點擊兩側的親代，看看這次會隨機配出什麼基因型的種子！</strong>
+                    </p>
+                </div>
+
+                <div class="relative flex flex-col items-center justify-between h-[350px] mt-8">
+                    <!-- 親代區 -->
+                    <div class="flex justify-between items-center w-full px-4 md:px-12 z-10">
+                        <div id="f1a" onclick="rollGamete(1)" class="cursor-pointer text-center p-6 border-4 border-dashed border-gray-300 rounded-2xl hover:bg-orange-50 hover:border-orange-400 transition w-5/12 md:w-1/3 shadow-sm bg-white">
+                            <div class="text-5xl font-black text-green-600 mb-2">Gg</div>
+                            <p class="text-sm font-bold text-gray-500 mt-2">點擊隨機提供因子</p>
+                        </div>
+                        <div class="text-4xl md:text-5xl font-bold text-gray-300">×</div>
+                        <div id="f1b" onclick="rollGamete(2)" class="cursor-pointer text-center p-6 border-4 border-dashed border-gray-300 rounded-2xl hover:bg-orange-50 hover:border-orange-400 transition w-5/12 md:w-1/3 shadow-sm bg-white">
+                            <div class="text-5xl font-black text-green-600 mb-2">Gg</div>
+                            <p class="text-sm font-bold text-gray-500 mt-2">點擊隨機提供因子</p>
+                        </div>
+                    </div>
+
+                    <!-- 動畫飛行的字母 (隱藏，直到觸發) -->
+                    <div id="f2-flying-1" class="gamete text-6xl font-black opacity-0" style="left: 20%; top: 40px;"></div>
+                    <div id="f2-flying-2" class="gamete text-6xl font-black opacity-0" style="right: 20%; top: 40px;"></div>
+
+                    <!-- 隨機結果區 (種子) -->
+                    <div class="mt-auto relative z-0 flex flex-col items-center">
+                        <div id="f2-seed-box" class="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center border-4 border-gray-400 shadow-inner mb-6 transition-all">
+                            <span id="f2-genotype-display" class="text-5xl font-black text-gray-400 tracking-tighter">??</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 預測按鈕區 -->
+                <div class="flex flex-col items-center">
+                    <div id="f2-predict-area" class="hidden text-center fade-in bg-white p-6 rounded-xl border border-gray-200 shadow-md w-full max-w-md mx-auto">
+                        <p class="font-bold text-xl mb-4 text-gray-800">根據這個基因型，您預測豆莢顏色是？</p>
+                        <div class="flex justify-center gap-6">
+                            <button onclick="revealF2('🟢 綠色')" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-bold text-lg shadow-md transform hover:scale-105 transition">
+                                🟢 預測綠色
+                            </button>
+                            <button onclick="revealF2('🟡 黃色')" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg font-bold text-lg shadow-md transform hover:scale-105 transition">
+                                🟡 預測黃色
                             </button>
                         </div>
                     </div>
                 </div>
 
+                <!-- 最後結果卡片 -->
+                <div id="f2-final-result" class="hidden mt-8 p-8 bg-white border-4 rounded-2xl shadow-lg text-center mx-auto max-w-lg">
+                    <p class="text-gray-500 font-bold mb-2">本次配對實驗結果</p>
+                    <div id="f2-card-color" class="text-6xl mb-4 drop-shadow-md"></div>
+                    <div class="text-3xl font-black mb-2 text-gray-800">基因型：<span id="res-geno" class="text-blue-600"></span></div>
+                    <div id="res-match" class="font-bold text-xl mb-3 p-3 rounded-lg"></div>
+                    
+                    <p class="text-lg text-purple-700 font-bold mb-6 bg-purple-50 py-2 border border-purple-200 rounded-lg shadow-sm">📝 請將這個結果記錄在你的講義上！</p>
+                    
+                    <button onclick="resetF2()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-md transition transform hover:scale-105 text-lg">
+                        🔄 再做一次
+                    </button>
+                </div>
             </div>
 
         </div>
     </div>
 
     <script>
-        // 狀態變數
+        // === 狀態變數 (Stage 1-4) ===
         let userPredictionCode = '';
         let userPredictionText = '';
         let gamete1Done = false;
         let gamete2Done = false;
 
-        // 顯示特定卡片
+        // === 狀態變數 (Stage 5) ===
+        let f1_g1 = ''; 
+        let f1_g2 = '';
+        let final_f2_geno = '';
+
+        // === 共用功能 ===
         function showStage(stageId) {
             document.querySelectorAll('.game-card').forEach(card => {
                 card.classList.remove('active');
@@ -326,13 +397,11 @@
         // ==================== 階段二邏輯 ====================
         function animateGamete(parent) {
             const seed = document.getElementById('seed-container');
-            const seedRect = seed.getBoundingClientRect();
             const seedGenotype = document.getElementById('seed-genotype');
             
             if (parent === 1 && !gamete1Done) {
                 const flyingG = document.getElementById('flying-G');
                 flyingG.style.opacity = '1';
-                // 簡易移動到中央
                 flyingG.style.transform = `translate(150px, 150px) scale(0.5)`; 
                 
                 setTimeout(() => {
@@ -347,7 +416,6 @@
             if (parent === 2 && !gamete2Done) {
                 const flyingg = document.getElementById('flying-g');
                 flyingg.style.opacity = '1';
-                // 簡易移動到中央
                 flyingg.style.transform = `translate(-150px, 150px) scale(0.5)`;
                 
                 setTimeout(() => {
@@ -382,7 +450,6 @@
             userPredictionCode = code;
             userPredictionText = text;
 
-            // UI 樣式更新
             document.querySelectorAll('.pred-btn').forEach(btn => {
                 btn.classList.remove('ring-4', 'ring-purple-400', 'bg-purple-50');
             });
@@ -399,7 +466,6 @@
             const displayPred = document.getElementById('display-prediction');
             displayPred.textContent = userPredictionText;
             
-            // 根據預測選項設定對應的顏色
             displayPred.className = 'text-2xl font-black px-4 py-2 rounded-lg inline-block border';
             if (userPredictionCode === 'A') {
                 displayPred.classList.add('text-green-700', 'bg-green-100', 'border-green-300');
@@ -423,27 +489,22 @@
         };
 
         function germinate() {
-            // 隱藏按鈕避免重複點擊
             const btn = document.getElementById('btn-germinate');
             btn.style.display = 'none';
 
-            // 1. 種子變暗/植入土中感覺
             const seed = document.getElementById('final-seed');
             seed.style.transform = 'scale(0.8) translateY(10px)';
             seed.style.backgroundColor = '#d97706';
             seed.style.color = 'transparent';
 
-            // 2. 植物長大動畫
             setTimeout(() => {
                 document.getElementById('plant').classList.add('plant-grow');
             }, 500);
 
-            // 3. 豆莢出現動畫
             setTimeout(() => {
                 document.getElementById('final-pod').classList.add('pod-appear');
             }, 1000);
 
-            // 4. 顯示評語
             setTimeout(() => {
                 const feedbackArea = document.getElementById('feedback-area');
                 const feedbackContent = document.getElementById('feedback-content');
@@ -453,6 +514,148 @@
             }, 2500);
         }
 
+        // ==================== 階段五邏輯 (F1 x F1) ====================
+        function setupStage5() { 
+            showStage('stage5'); 
+        }
+
+        function rollGamete(parentNum) {
+            // 隨機抽 50% G 或 50% g
+            const factor = Math.random() > 0.5 ? 'G' : 'g';
+            const colorClass = factor === 'G' ? 'text-green-600' : 'text-yellow-600';
+            
+            if(parentNum === 1) {
+                f1_g1 = factor;
+                const p1El = document.getElementById('f1a');
+                p1El.innerHTML = `<div class="text-6xl font-black ${colorClass} mb-2">${factor}</div><p class="text-sm font-bold text-green-600 mt-2">已提供因子</p>`;
+                p1El.classList.add('border-green-400', 'bg-green-50');
+                p1El.style.pointerEvents = 'none';
+
+                // 啟動配子飛行動畫
+                const flying1 = document.getElementById('f2-flying-1');
+                flying1.textContent = factor;
+                flying1.className = `gamete text-6xl font-black ${colorClass} opacity-0`;
+                flying1.style.display = 'block';
+                
+                setTimeout(() => {
+                    flying1.style.opacity = '1';
+                    flying1.style.transform = `translate(150px, 150px) scale(0.5)`;
+                }, 10);
+
+                setTimeout(() => {
+                    flying1.style.display = 'none';
+                    updateF2SeedText();
+                }, 1000);
+
+            } else {
+                f1_g2 = factor;
+                const p2El = document.getElementById('f1b');
+                p2El.innerHTML = `<div class="text-6xl font-black ${colorClass} mb-2">${factor}</div><p class="text-sm font-bold text-green-600 mt-2">已提供因子</p>`;
+                p2El.classList.add('border-green-400', 'bg-green-50');
+                p2El.style.pointerEvents = 'none';
+
+                // 啟動配子飛行動畫
+                const flying2 = document.getElementById('f2-flying-2');
+                flying2.textContent = factor;
+                flying2.className = `gamete text-6xl font-black ${colorClass} opacity-0`;
+                flying2.style.display = 'block';
+
+                setTimeout(() => {
+                    flying2.style.opacity = '1';
+                    flying2.style.transform = `translate(-150px, 150px) scale(0.5)`;
+                }, 10);
+
+                setTimeout(() => {
+                    flying2.style.display = 'none';
+                    updateF2SeedText();
+                }, 1000);
+            }
+        }
+
+        function updateF2SeedText() {
+            const display = document.getElementById('f2-genotype-display');
+            
+            if (f1_g1 && !f1_g2) {
+                const c = f1_g1 === 'G' ? 'text-green-600' : 'text-yellow-600';
+                display.innerHTML = `<span class="${c}">${f1_g1}</span>_`;
+            } else if (!f1_g1 && f1_g2) {
+                const c = f1_g2 === 'G' ? 'text-green-600' : 'text-yellow-600';
+                display.innerHTML = `_<span class="${c}">${f1_g2}</span>`;
+            } else if (f1_g1 && f1_g2) {
+                // 將字母排序，確保一定是 GG, Gg, gg (不出現 gG)
+                let res = [f1_g1, f1_g2].sort().join('');
+                final_f2_geno = res;
+                
+                const c1 = res[0] === 'G' ? 'text-green-600' : 'text-yellow-600';
+                const c2 = res[1] === 'G' ? 'text-green-600' : 'text-yellow-600';
+                display.innerHTML = `<span class="${c1}">${res[0]}</span><span class="${c2}">${res[1]}</span>`;
+                display.className = 'text-5xl font-black tracking-widest';
+                
+                document.getElementById('f2-predict-area').classList.remove('hidden');
+            }
+        }
+
+        function revealF2(prediction) {
+            const isGreen = final_f2_geno.includes('G'); // 只要有 G 就是綠色
+            const actualColor = isGreen ? '🟢 綠色' : '🟡 黃色';
+            const resultCard = document.getElementById('f2-final-result');
+            
+            // 隱藏預測按鈕，顯示結果卡片
+            document.getElementById('f2-predict-area').classList.add('hidden');
+            resultCard.classList.remove('hidden');
+            
+            // 更新結果卡片內容
+            document.getElementById('f2-card-color').innerHTML = isGreen ? '🟢<br><span class="text-3xl text-green-600 font-bold">綠色豆莢</span>' : '🟡<br><span class="text-3xl text-yellow-500 font-bold">黃色豆莢</span>';
+            document.getElementById('res-geno').textContent = final_f2_geno;
+            
+            // 判斷是否預測正確
+            const match = prediction === actualColor;
+            const matchEl = document.getElementById('res-match');
+            if (match) {
+                matchEl.textContent = `✅ 恭喜預測成功！`;
+                matchEl.className = 'font-bold text-xl mb-6 p-3 rounded-lg bg-green-100 text-green-700';
+                resultCard.style.borderColor = '#16a34a'; // 綠邊框
+            } else {
+                matchEl.textContent = `❌ 預測結果不完全正確！`;
+                matchEl.className = 'font-bold text-xl mb-6 p-3 rounded-lg bg-red-100 text-red-600';
+                resultCard.style.borderColor = '#dc2626'; // 紅邊框
+            }
+        }
+
+        function resetF2() {
+            // 重置所有變數
+            f1_g1 = ''; 
+            f1_g2 = ''; 
+            final_f2_geno = '';
+            
+            // 重置飛行動畫元素
+            const flying1 = document.getElementById('f2-flying-1');
+            flying1.style.transform = 'translate(0, 0) scale(1)';
+            flying1.style.opacity = '0';
+            
+            const flying2 = document.getElementById('f2-flying-2');
+            flying2.style.transform = 'translate(0, 0) scale(1)';
+            flying2.style.opacity = '0';
+            
+            // 重置親代按鈕狀態
+            const p1El = document.getElementById('f1a');
+            p1El.style.pointerEvents = 'auto';
+            p1El.className = 'cursor-pointer text-center p-6 border-4 border-dashed border-gray-300 rounded-2xl hover:bg-orange-50 hover:border-orange-400 transition w-5/12 md:w-1/3 shadow-sm bg-white';
+            p1El.innerHTML = `<div class="text-5xl font-black text-green-600 mb-2">Gg</div><p class="text-sm font-bold text-gray-500 mt-2">點擊隨機提供因子</p>`;
+            
+            const p2El = document.getElementById('f1b');
+            p2El.style.pointerEvents = 'auto';
+            p2El.className = 'cursor-pointer text-center p-6 border-4 border-dashed border-gray-300 rounded-2xl hover:bg-orange-50 hover:border-orange-400 transition w-5/12 md:w-1/3 shadow-sm bg-white';
+            p2El.innerHTML = `<div class="text-5xl font-black text-green-600 mb-2">Gg</div><p class="text-sm font-bold text-gray-500 mt-2">點擊隨機提供因子</p>`;
+            
+            // 重置顯示區
+            const display = document.getElementById('f2-genotype-display');
+            display.textContent = '??';
+            display.className = 'text-5xl font-black text-gray-400 tracking-tighter';
+            
+            document.getElementById('f2-final-result').classList.add('hidden');
+            document.getElementById('f2-predict-area').classList.add('hidden');
+        }
     </script>
 </body>
 </html>
